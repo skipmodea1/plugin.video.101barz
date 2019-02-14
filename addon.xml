@@ -14,9 +14,9 @@
         <provides>video</provides>
     </extension>
     <extension point="xbmc.addon.metadata">
-        <summary lang="enGB">Video clips featuring mostly dutch hip hop artists</summary>
-            <description lang="enGB">Video clips featuring mostly dutch hip hop artists</description>
-            <disclaimer lang="enGB">For bugs, requests or general questions visit the 101barz thread on the Kodi forum.</disclaimer>
+        <summary lang="en_GB">Video clips featuring mostly dutch hip hop artists</summary>
+            <description lang="en_GB">Video clips featuring mostly dutch hip hop artists</description>
+            <disclaimer lang="en_GB">For bugs, requests or general questions visit the 101barz thread on the Kodi forum.</disclaimer>
        <summary lang="nl_NL">Video clips van voornamelijk nederlandse hip hop artiesten</summary>
             <description lang="nl_NL">Video clips van voornamelijk nederlandse hip hop artiesten</description>
             <disclaimer lang="nl_NL">Bugs of andere feedback op deze plugin kan geplaatst worden in de 101barz thread op het Kodi forum.</disclaimer>
