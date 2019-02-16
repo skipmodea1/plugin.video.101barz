@@ -65,7 +65,7 @@ def list_videos(url):
 
     for item in json_data['video']:
 
-        log("item", item)
+        #log("item", item)
 
         length = ""
         title = item['title']
@@ -124,7 +124,7 @@ def get_url(url):
     else:
         complete_url = BASE_URL + url
 
-    log("complete_url", complete_url)
+    #log("complete_url", complete_url)
 
     response = requests.get(complete_url, headers=HEADERS, cookies=COOKIES)
     html_source = response.text
