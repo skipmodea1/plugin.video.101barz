@@ -149,7 +149,7 @@ def parameters_string_to_dict(parameters):
 
 def add_link(title, url, mode, thumbnail_image_url, desc="", duration=""):
     u = sys.argv[0] + "?url=" + urllib.parse.quote_plus(url) + "&mode=" + convertToUnicodeString(mode)
-    liz = xbmcgui.ListItem(label=title, thumbnailImage=thumbnail_image_url)
+    liz = xbmcgui.ListItem(label=title)
     liz.setArt({'thumb': thumbnail_image_url, 'icon': thumbnail_image_url})
     liz.setInfo(type="Video", infoLabels={"Title": title, "Plot": desc, "Duration": duration})
     liz.setProperty('IsPlayable', 'true')
@@ -164,7 +164,7 @@ def add_link(title, url, mode, thumbnail_image_url, desc="", duration=""):
 
 def add_dir(title, url, mode, thumbnail_image_url, desc=""):
     u = sys.argv[0] + '?url=' + urllib.parse.quote_plus(url) + '&mode=' + convertToUnicodeString(mode)
-    liz = xbmcgui.ListItem(label=title, thumbnailImage=thumbnail_image_url)
+    liz = xbmcgui.ListItem(label=title)
     liz.setArt({'thumb': thumbnail_image_url, 'icon': thumbnail_image_url})
     liz.setInfo(type='video', infoLabels={'title': title, 'plot': desc, 'plotoutline': desc})
     # let's remove any non-ascii characters from the title, to prevent errors with urllib.parse.parse_qs
