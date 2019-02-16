@@ -49,20 +49,13 @@ def index():
 
 
 def list_videos(url):
-    log("url", url)
-
     # add category number to search url
     CATEGORY = "category="
     start_pos = convertToUnicodeString(url).find(CATEGORY)
     if start_pos >= 0:
         end_pos = convertToUnicodeString(url).find("&", start_pos)
         category_value = convertToUnicodeString(url)[start_pos + len(CATEGORY):end_pos]
-
-        log("category_value", category_value)
-
         search_url = convertToUnicodeString(SEARCHURL).replace("<categorystring>", category_value)
-
-        log("search_url", search_url)
 
         # add search url
         add_dir(LANGUAGE(30001), search_url, 'search', "")
@@ -70,22 +63,19 @@ def list_videos(url):
     html_source = get_url(url)
     json_data = json.loads(html_source)
 
-    log("json_data", json_data)
-
     for item in json_data['video']:
+
         log("item", item)
 
         length = ""
         title = item['title']
         desc = item['subtitle']
         date = item['publish_up']
-        thumb = item['card_image']
+        thumbnail_image_url = item['card_image']
         youtube_id = item['youtube_id']
         youtube_url = 'plugin://plugin.video.youtube/play/?video_id=%s' % youtube_id
 
-        log("youtube_url", youtube_url)
-
-        add_link(title, youtube_url, 'play_video', thumb, date + "\n" + desc, length, youtube_id)
+        add_link(title, youtube_url, 'play_video', thumbnail_image_url, date + "\n" + desc, length)
 
     # add next page url
     url_next = url
@@ -101,8 +91,6 @@ def list_videos(url):
         url_next = convertToUnicodeString(url_next).replace(OFFSET + convertToUnicodeString(old_offset_value), OFFSET +
                                                             convertToUnicodeString(new_offset_value))
 
-        log('url_next', url_next)
-
         add_dir(LANGUAGE(30009), url_next, 'list_videos', os.path.join(IMAGES_PATH, 'next-page.png'))
 
     xbmcplugin.endOfDirectory(PLUGIN_HANDLE)
@@ -111,8 +99,6 @@ def list_videos(url):
 def search(url):
     # decode the url
     url = urllib.parse.unquote_plus(url)
-
-    log("search input url", url)
 
     keyboard = xbmc.Keyboard('', LANGUAGE(30008))
     keyboard.doModal()
@@ -123,9 +109,6 @@ def search(url):
 
 
 def play_video(video_url):
-
-    log("video_url", video_url)
-
     list_item = xbmcgui.ListItem(path=video_url)
     return xbmcplugin.setResolvedUrl(PLUGIN_HANDLE, True, list_item)
 
@@ -147,7 +130,7 @@ def get_url(url):
     html_source = response.text
     html_source = convertToUnicodeString(html_source)
 
-    # log("html_source", html_source)
+    #log("html_source", html_source)
 
     return html_source
 
@@ -164,9 +147,10 @@ def parameters_string_to_dict(parameters):
     return param_dict
 
 
-def add_link(title, url, mode, iconimage, desc="", duration="", youtube_id = ""):
+def add_link(title, url, mode, thumbnail_image_url, desc="", duration=""):
     u = sys.argv[0] + "?url=" + urllib.parse.quote_plus(url) + "&mode=" + convertToUnicodeString(mode)
-    liz = xbmcgui.ListItem(title, iconImage="DefaultVideo.png", thumbnailImage=iconimage)
+    liz = xbmcgui.ListItem(label=title, thumbnailImage=thumbnail_image_url)
+    liz.setArt({'thumb': thumbnail_image_url, 'icon': thumbnail_image_url})
     liz.setInfo(type="Video", infoLabels={"Title": title, "Plot": desc, "Duration": duration})
     liz.setProperty('IsPlayable', 'true')
     # let's remove any non-ascii characters from the title, to prevent errors with urllib.parse.parse_qs
@@ -178,9 +162,10 @@ def add_link(title, url, mode, iconimage, desc="", duration="", youtube_id = "")
     return ok
 
 
-def add_dir(title, url, mode, iconimage, desc=""):
+def add_dir(title, url, mode, thumbnail_image_url, desc=""):
     u = sys.argv[0] + '?url=' + urllib.parse.quote_plus(url) + '&mode=' + convertToUnicodeString(mode)
-    liz = xbmcgui.ListItem(title, iconImage='DefaultFolder.png', thumbnailImage=iconimage)
+    liz = xbmcgui.ListItem(label=title, thumbnailImage=thumbnail_image_url)
+    liz.setArt({'thumb': thumbnail_image_url, 'icon': thumbnail_image_url})
     liz.setInfo(type='video', infoLabels={'title': title, 'plot': desc, 'plotoutline': desc})
     # let's remove any non-ascii characters from the title, to prevent errors with urllib.parse.parse_qs
     # of the parameters
@@ -229,7 +214,7 @@ mode = params.get('mode')
 url = params.get('url')
 
 if url is None:
-    if SETTINGS.getSetting('onlyshowallvideoscategory') == 'true':
+    if SETTINGS.getSettingBool('onlyshowallvideoscategory'):
         mode = 'list_videos'
         url = urllib.parse.quote_plus(BASE_URL + ALLESURL)
 
